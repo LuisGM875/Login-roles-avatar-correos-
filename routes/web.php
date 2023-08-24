@@ -28,5 +28,20 @@ Route::get('/logout',[UsuarioController::class,'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
     Route::view('/principal',"principal")->name('principal');
-    Route::view('/Configuracion',"userconfig")->name('Configuracion');
+
+    Route::get('/edit/{id}',[UsuarioController::class,'actualizar'])->name('Editar');
+    Route::put('/update/{id}',[UsuarioController::class,'update'])->name('Actualizar');
+});
+
+
+use Laravel\Socialite\Facades\Socialite;
+
+Route::get('/auth/redirect', function () {
+    return Socialite::driver('github')->redirect();
+});
+
+Route::get('/auth/callback', function () {
+    $user = Socialite::driver('github')->user();
+
+    // $user->token
 });

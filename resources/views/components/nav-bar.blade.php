@@ -9,6 +9,7 @@
         @endauth
         <i class="icon ion-ios-arrow-forward icon-mobile"></i>
     </a>
+
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <div class="container">
             <img src="{{ asset('assets/images/logo.png') }}" class="img-fluid nav-logo-desktop" alt="Company Logo">
@@ -17,7 +18,7 @@
                     <a class="nav-link" href="{{route('principal')}}">Roles <i class="icon ion-ios-arrow-forward icon-mobile"></i></a>
                 </li>
                 <li class="nav-item nav-custom-link">
-                    <a class="nav-link" href="{{route('Configuracion')}}">Configuracion <i class="icon ion-ios-arrow-forward icon-mobile"></i></a>
+                    <a class="nav-link" href="{{route('Editar',['id' => Auth::user()->id])}}">Configuracion <i class="icon ion-ios-arrow-forward icon-mobile"></i></a>
                 </li>
                 <li class="nav-item nav-custom-link">
 

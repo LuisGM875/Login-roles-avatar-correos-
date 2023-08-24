@@ -31,8 +31,7 @@
                         <li><i class="fa fa-facebook"></i></li>
                         <li><i class="fa fa-twitter"></i></li>
                         <li><i class="fa fa-google-plus"></i></li>
-                        <li><i class="fa fa-instagram"></i></li>
-                        <li><i class="fa fa-linkedin"></i></li>
+                        <li><i class="fa fa-github"></i></li>
                     </ol>
                 </div>
             </div>
@@ -46,6 +45,19 @@
 @php($nombre="Hugo")
     <div class="bg-img">
         <div class="content">
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var avatarCheckbox = document.getElementById("avatarCheckbox");
+
+                    avatarCheckbox.addEventListener("change", function() {
+                        if (avatarCheckbox.checked) {
+                            avatarCheckbox.value = "true";
+                        } else {
+                            avatarCheckbox.value = "false";
+                        }
+                    });
+                });
+            </script>
             <header>Registrate aqui</header>
             <form method="POST" action="{{route('Registrar')}}">
                 @csrf
@@ -57,6 +69,15 @@
                     <span class="fa fa-user"></span>
                     <input type="text" id="apellido" name="apellido" required placeholder="Apellido">
                 </div>
+                <div class="field space">
+                    <span class="fa fa-user"></span>
+                    <select id="rol" name="rol" required>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Registrado">Registrado</option>
+                        <option value="Invitado">Invitado</option>
+                    </select>
+                </div>
+
                 <div class="field space">
                     <span class="fa fa-envelope"></span>
                     <input type="text" id="email" name="email" required placeholder="Correo">
@@ -71,7 +92,7 @@
                         <label for="avatarCheckbox" class="signup mb-10">
                             <span>¿Quieres un avatar de este estilo?</span>
                         </label>
-                        <input  class="form-check-input" type="checkbox" id="avatarCheckbox" name="avatarCheckbox">
+                        <input  class="form-check-input" type="checkbox" id="avatarCheckbox" name="avatarCheckbox" value="true">
                     </div>
                 </div>
 
@@ -126,7 +147,54 @@
         </div>
     </div>
 @elseif($vista=='Configuracion')
+    <div class="bg-img">
+        <div class="content">
+            <header>Configuración de usuario</header>
+            <form method="POST" action="{{route('Actualizar',['id' => $User->id])}}">
+                @csrf
+                @method('PUT')
+                <div class="field">
+                    <span class="fa fa-user"></span>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Nombre" value="{{$User->nombre}}">
+                </div>
+                <div class="field space">
+                    <span class="fa fa-user"></span>
+                    <input type="text" id="apellido" name="apellido" required placeholder="Apellido" value="{{$User->apellido}}">
+                </div>
+                <div class="field space">
+                    <span class="fa fa-envelope"></span>
+                    <input type="text" id="email" name="email" required placeholder="Correo" value="{{$User->email}}">
+                </div>
+                <div class="field space">
+                    <span class="fa fa-users"></span>
+                    <input type="text" id="usuario" name="usuario" required placeholder="Nombre de usuario">
+                </div>
+                <div class="space">
+                    <img src="https://api.dicebear.com/6.x/adventurer/svg?seed=Luisa&backgroundColor=18F322" alt="" width="70px">
+                    <div>
+                        <label for="avatarCheckbox" class="signup mb-10">
+                            <span>¿Quieres un avatar de este estilo?</span>
+                        </label>
+                        <input  class="form-check-input" type="checkbox" id="avatarCheckbox" name="avatarCheckbox">
+                    </div>
+                </div>
 
+                <div class="field space">
+                    <span class="fa fa-lock"></span>
+                    <input type="password" id="password" name="password" class="pass-key" required placeholder="Contraseña">
+                    <span id="passwordToggle" class="fa fa-eye" onclick="ver()"></span>
+                </div>
+                <div class="field space">
+                    <span class="fa fa-lock"></span>
+                    <input type="password" id="confirm" name="confirm" class="pass-key" required placeholder="Confirma Contraseña">
+                </div>
+
+                <div class="field">
+                    <input type="submit" value="Editar">
+                </div>
+            </form>
+        </div>
+    </div>
 @endif
 
 

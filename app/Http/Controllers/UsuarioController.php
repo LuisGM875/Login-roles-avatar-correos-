@@ -15,38 +15,52 @@ class UsuarioController extends Controller
 {
     public function register(Request $request)
     {
+        // Verificar si ya existe un usuario con el mismo nombre de usuario o correo electrónico
+        $existingUser = User::where('usuario', $request->usuario)
+            ->orWhere('email', $request->email)
+            ->exists();
+
+        if ($existingUser) {
+            // Si ya existe un usuario con el mismo nombre de usuario o correo electrónico, redirige de vuelta al formulario de registro con un mensaje de error.
+            return redirect('registro')->with('error', 'El nombre de usuario o el correo electrónico ya están en uso.');
+        }
+
         $user=new User();
         $user->nombre=$request->nombre;
         $user->apellido=$request->apellido;
         $user->usuario=$request->usuario;
         $user->email=$request->email;
-        $user->avatar=$request->avatar;
-        $user->password=Hash::make($request->password);
-        $user->save();
-        Auth::login($user);
-        return redirect(route('principal'));
+        $user->rol=$request->rol;
+        $user->avatar = $request->has('avatarCheckbox');
+
+        if($request->confirm==$request->password){
+            $user->password=Hash::make($request->password);
+            $user->save();
+
+            Auth::login($user);
+            return redirect(route('principal'));
+        }else{
+            return redirect('registro');
+        }
+
+
     }
 
     public function login(Request $request)
     {
-        $credentials=[
-            "usuario"=>$request->UserorEmail,
-            "password"=>$request->password,
-        ];
-        //mantener la sesion con culaquier cambio entre paginas
-        $remember=($request->has('remember')?true:false);
-        //clase de auth metodo estatico para verificar el intento de sesion
-        if(Auth::attempt($credentials,$remember)){
-            //preparar sesion
+        $loginField = $request->input('UserorEmail');
+        $password = $request->input('password');
+
+        if (Auth::attempt(['usuario' => $loginField, 'password' => $password]) || Auth::attempt(['email' => $loginField, 'password' => $password])) {
             $request->session()->regenerate();
-            //por si estas dentro del crud y entras a otro espacio privado
             return redirect()->intended(route('principal'));
-        }else{
+        } else {
             return redirect('login');
         }
     }
 
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         Auth::logout();
         //resetear la sesion(se invalida)
         $request->session()->invalidate();
@@ -54,4 +68,24 @@ class UsuarioController extends Controller
         $request->session()->regenerateToken();
         return redirect(route('login'));
     }
+
+    public function update(Request $request,$id)
+    {
+        $user=User::find($id);
+        $user->nombre=$request->nombre;
+        $user->apellido=$request->apellido;
+        $user->usuario=$request->usuario;
+        $user->email=$request->email;
+        $user->rol=$request->rol;
+        $user->avatar=$request->avatar;
+        $user->save();
+        return redirect()->route('principal');
+    }
+
+    public function actualizar($id)
+    {
+        $User = User::find($id);
+        return view("edit", compact('User'));
+    }
+
 }
