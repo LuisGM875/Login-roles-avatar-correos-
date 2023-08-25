@@ -6,6 +6,7 @@ use App\Http\Controllers\UsuarioController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\SocialController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -56,30 +57,11 @@ Route::view('/about',"about")->name('Otro');
 Route::view('/checkout',"checkout")->name('Checar');
 Route::view('/contact',"contact")->name('Contacto');
 
-
-Route::get('/auth/redirect', function () {
-    return Socialite::driver('github')->redirect();
-});
-
 Route::get('mail/send', [MailController::class,'send'])->name('EnviarCorreo');
 Route::get('mail/send', [MailController::class,'send'])->name('EnviarToken');
 
 
 
+Route::get('auth/facebook',[SocialController::class,'redirectFacebook']);
 
-Route::get('/auth/callback', function () {
-    $githubUser = Socialite::driver('github')->user();
-
-    $user = User::updateOrCreate([
-        'github_id' => $githubUser->id,
-    ], [
-        'name' => $githubUser->name,
-        'email' => $githubUser->email,
-        'github_token' => $githubUser->token,
-        'github_refresh_token' => $githubUser->refreshToken,
-    ]);
-
-    Auth::login($user);
-
-    return redirect(route('principal'));
-});
+Route::get('auth/facebook/callback',[SocialController::class,'callbackFacebook']);

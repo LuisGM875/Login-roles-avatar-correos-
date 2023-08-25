@@ -27,8 +27,8 @@
             <div class="login">O registrate con</div>
             <div class="form-group pt-0">
                 <div class="_social_04">
-                    <ol>
-                        <li><i class="fa fa-facebook"></i></li>
+                    <ol><a href="{{url('auth/facebook')}}">
+                        <li><i class="fa fa-facebook"></i></li></a>
                         <li><i class="fa fa-twitter"></i></li>
                         <li><i class="fa fa-google-plus"></i></li>
                         <li><i class="fa fa-github"></i></li>
